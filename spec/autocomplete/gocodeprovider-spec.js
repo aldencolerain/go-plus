@@ -912,6 +912,42 @@ describe('gocodeprovider', () => {
         })
       })
     })
+
+    it('does not continue with suggestions from fmt after fmt.Printf(', () => {
+      openFileAt(path.join('autocomplete', 'fmt-with-variable', 'main.go'), 7, 0)
+
+      // add "fmt."
+      runs(() => {
+        insertText(editor, 'fmt.')
+      })
+
+      waitForSuggestions()
+
+      // this results in several suggestions like Printf, Errorf
+      runs(expectAnySuggestions)
+
+      // complete the text by adding "Printf("
+      runs(() => {
+        insertText(editor, 'Printf(')
+      })
+
+      waitForSuggestions()
+
+      runs(resetSuggestionsAndPromise)
+
+      // get new suggestions for "f"
+      runs(() => {
+        insertText(editor, 'f')
+      })
+
+      waitForSuggestions()
+
+      // should return a suggestion for "foo"
+      runs(() => {
+        expectAnySuggestions()
+        expect(suggestions.find((s) => s.text === 'foo')).toBeTruthy()
+      })
+    })
   })
 
   describe('when the go-plus-issue-307 file is opened', () => {
