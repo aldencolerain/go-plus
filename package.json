@@ -158,6 +158,13 @@
           "type": "string",
           "default": "",
           "order": 1
+        },
+        "postal": {
+          "title": "Postal Container",
+          "description": "Postal container to proxy all go commands to.",
+          "type": "string",
+          "default": "dev",
+          "order": 2
         }
       }
     },
